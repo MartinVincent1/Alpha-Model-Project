@@ -1,0 +1,301 @@
+getwd()
+setwd("C:\\Users\\zachary.burns\\Desktop\\zach\\R_docs\\part2")
+Library(TTR);library(quantmod);library(PerformanceAnalytics)
+# CPI data collected from https://beta.bls.gov/dataViewer/view/timeseries/CUUR0000SA0;jsessionid=8F3D60C70F6EAAF633F9391EB0C0A662
+
+### Getting NCLH Stock Info ###
+NCLH.vec <- c("NCLH") 
+NCLH.datal<- getSymbols(NCLH.vec,from="2018-09-01",to = "2021-09-01") # 3 years of data
+NCLH.datal
+NCLH.vec
+NCLH
+df <-data.frame(NCLH)
+
+write.csv(df,'NCLH_data.csv')
+# Input CPI data
+
+NCLH_DF = read.csv('NCLH_data.csv')
+head(NCLH_DF)
+
+data = NCLH_DF
+sma3 = SMA(data[c('ADJUSTED.PRICE')],n=3)
+sma13 = SMA(data[c('ADJUSTED.PRICE')],n=13)
+NCLH_DF = data.frame(NCLH_DF,sma3,sma13)
+head(NCLH_DF)
+NCLH_DF$sma_diff = c(NCLH_DF$sma3) - c(NCLH_DF$sma13)
+head(NCLH_DF,n=30)
+
+
+# adding in excel: P_1_Return, SMA3 Indicator, SMA3 Counter
+
+NCLH <- NCLH[,"NCLH.Adjusted", drop=F]
+
+NCLH.logret = CalculateReturns(NCLH, method="log") #discrete or log
+NCLH.logret
+NCLH_DF$log_return <- NCLH.logret
+head(NCLH_DF)
+write.csv(NCLH_DF,'NCLH_data.csv')
+
+### Getting KTOS Stock Info ###
+
+ktos.vec <- c("KTOS") 
+ktos.datal<- getSymbols(ktos.vec,from="2018-09-01",to = "2021-09-01")
+ktos.datal
+ktos.vec
+KTOS
+df <-data.frame(KTOS)
+
+write.csv(df,'ktos_data.csv')
+# Manually input CPI data
+ktos_DF = read.csv('ktos_data.csv')
+head(ktos_DF)
+
+data = ktos_DF
+sma3 = SMA(data[c('ADJUSTED.PRICE')],n=3)
+sma13 = SMA(data[c('ADJUSTED.PRICE')],n=13)
+ktos_DF = data.frame(ktos_DF,sma3,sma13)
+head(ktos_DF)
+ktos_DF$sma_diff = c(ktos_DF$sma3) - c(ktos_DF$sma13)
+head(ktos_DF,n=30)
+
+
+# adding in excel: P_1_Return, SMA3 Indicator, SMA3 Counter
+
+KTOS <- KTOS[,"KTOS.Adjusted", drop=F]
+
+KTOS.logret = CalculateReturns(KTOS, method="log") #discrete or log
+KTOS.logret
+ktos_DF$log_return <- KTOS.logret
+head(ktos_DF)
+write.csv(ktos_DF,'ktos_data.csv')
+
+### GME STOCK DATA ###
+GME.vec <- c("GME") 
+GME.datal<- getSymbols(GME.vec,from="2018-09-01",to = "2021-09-01")
+GME.datal
+GME.vec
+GME
+df <-data.frame(GME)
+
+write.csv(df,'GME_data.csv')
+
+GME_DF = read.csv('GME_data.csv')
+head(GME_DF)
+
+data = GME_DF
+sma3 = SMA(data[c('ADJUSTED.PRICE')],n=3)
+sma13 = SMA(data[c('ADJUSTED.PRICE')],n=13)
+GME_DF = data.frame(GME_DF,sma3,sma13)
+head(GME_DF)
+GME_DF$sma_diff = c(GME_DF$sma3) - c(GME_DF$sma13)
+head(GME_DF,n=30)
+
+
+# adding in excel: P_1_Return, SMA3 Indicator, SMA3 Counter
+
+GME <- GME[,"GME.Adjusted", drop=F]
+
+GME.logret = CalculateReturns(GME, method="log") #discrete or log
+GME.logret
+GME_DF$log_return <- GME.logret
+head(GME_DF)
+write.csv(GME_DF,'GME_data.csv')
+
+### Getting CSCO DATA ###
+csco.vec <- c("CSCO")
+csco.datal<- getSymbols(csco.vec,from="2018-09-01",to = "2021-09-01")
+csco.datal
+csco.vec
+CSCO
+df <-data.frame(CSCO)
+
+write.csv(df,'CSCO_data.csv')
+# adding in excel: P_1_Return, SMA3 Indicator, SMA3 Counter
+csco_DF = read.csv('CSCO_data.csv')
+head(csco_DF)
+
+data = csco_DF
+sma3 = SMA(data[c('ADJUSTED.PRICE')],n=3)
+sma13 = SMA(data[c('ADJUSTED.PRICE')],n=13)
+csco_DF = data.frame(csco_DF,sma3,sma13)
+head(csco_DF)
+csco_DF$sma_diff = c(csco_DF$sma3) - c(csco_DF$sma13)
+head(csco_DF,n=30)
+write.csv(csco_DF,'CSCO_data.csv')
+
+# adding P_1_Return
+
+CSCO <- CSCO[,"CSCO.Adjusted", drop=F]
+CSCO.disret = CalculateReturns(CSCO, method="discrete") #discrete or log
+csco_DF$dis_return <- CSCO.disret
+
+CSCO.logret = CalculateReturns(CSCO, method="log") #discrete or log
+csco_DF$log_return <- CSCO.logret
+head(csco_DF)
+write.csv(csco_DF,'CSCO_data.csv')
+
+
+###
+
+
+
+#####SENTIMENT DATA #####
+
+#install.packages("RedditExtractoR"); install.packages("sentimentr")
+library(RedditExtractoR); library(sentimentr); library(dplyr); library(writexl)
+
+########GME
+#get post urls and get threads from the urls
+gmePosts <- find_thread_urls(keywords = "GME", sort_by = "top", period = "all")
+thread <- get_thread_content(gmePosts$url)
+
+#sentiment analysis on the text
+sent <- sentiment(thread$threads$text)
+
+#average the sentiments for each post
+sentID <- aggregate(.~element_id, data=sent, mean, na.action = NULL)
+
+#Create table with date and sentiment
+sentTable <- data.frame(sentID$sentiment, thread$threads$date)
+
+#remove 0 values
+sentTable <- sentTable[sentTable$sentID.sentiment != 0,]
+
+#order by date
+sentTable <- sentTable[order(as.Date(sentTable$thread.threads.date)),]
+
+#average each day
+sentTableCombined <- aggregate(.~thread.threads.date, data=sentTable, mean, na.action = NULL)
+
+#rename columns
+names(sentTableCombined)[1] <- 'Date'
+names(sentTableCombined)[2] <- 'Sentiment'
+
+#write as table
+write.csv(sentTableCombined, "GME_sentiment.csv")
+
+##########KTOS
+ktosPosts <- find_thread_urls(keywords = "KTOS", sort_by = "top", period = "all", subreddit = "WallStreetBets")
+ktosThread <- get_thread_content(ktosPosts$url)
+
+#sentiment analysis on the text
+ktossent <- sentiment(ktosThread$threads$text)
+
+#average the sentiments for each post
+ktossentID <- aggregate(.~element_id, data=ktossent, mean, na.action = NULL)
+
+#Create table with date and sentiment
+ktossentTable <- data.frame(ktossentID$sentiment, ktosThread$threads$date)
+
+#remove 0 values
+ktossentTable <- ktossentTable[ktossentTable$ktossentID.sentiment != 0,]
+
+#order by date
+ktossentTable <- ktossentTable[order(as.Date(ktossentTable$ktosThread.threads.date)),]
+
+#average each day
+ktossentTableCombined <- aggregate(.~ktosThread.threads.date, data=ktossentTable, mean, na.action = NULL)
+
+#rename columns
+names(ktossentTableCombined)[1] <- 'Date'
+names(ktossentTableCombined)[2] <- 'Sentiment'
+
+#write as table
+write.csv(ktossentTableCombined, "KTOS_sentiment.csv")
+
+#########NCLH
+nclhPosts <- find_thread_urls(keywords = "NCLH", sort_by = "top", period = "all")
+nclhThread <- get_thread_content(nclhPosts$url)
+
+#sentiment analysis on the text
+nclhsent <- sentiment(nclhThread$threads$text)
+
+#average the sentiments for each post
+nclhsentID <- aggregate(.~element_id, data=nclhsent, mean, na.action = NULL)
+
+#Create table with date and sentiment
+nclhsentTable <- data.frame(nclhsentID$sentiment, nclhThread$threads$date)
+
+#remove 0 values
+nclhsentTable <- nclhsentTable[nclhsentTable$nclhsentID.sentiment != 0,]
+
+#order by date
+nclhsentTable <- nclhsentTable[order(as.Date(nclhsentTable$nclhThread.threads.date)),]
+
+#average each day
+nclhsentTableCombined <- aggregate(.~nclhThread.threads.date, data=nclhsentTable, mean, na.action = NULL)
+
+#rename columns
+names(nclhsentTableCombined)[1] <- 'Date'
+names(nclhsentTableCombined)[2] <- 'Sentiment'
+
+#write as table
+write.csv(nclhsentTableCombined, "NCLH_sentiment.csv")
+
+##############CSCO
+cscoPosts <- find_thread_urls(keywords = "CSCO", sort_by = "top", period = "all")
+cscoThread <- get_thread_content(cscoPosts$url)
+
+#sentiment analysis on the text
+cscosent <- sentiment(cscoThread$threads$text)
+
+#average the sentiments for each post
+cscosentID <- aggregate(.~element_id, data=cscosent, mean, na.action = NULL)
+
+#Create table with date and sentiment
+cscosentTable <- data.frame(cscosentID$sentiment, cscoThread$threads$date)
+
+#remove 0 values
+cscosentTable <- cscosentTable[cscosentTable$cscosentID.sentiment != 0,]
+
+#order by date
+cscosentTable <- cscosentTable[order(as.Date(cscosentTable$cscoThread.threads.date)),]
+
+#average each day
+cscosentTableCombined <- aggregate(.~cscoThread.threads.date, data=cscosentTable, mean, na.action = NULL)
+
+#rename columns
+names(cscosentTableCombined)[1] <- 'Date'
+names(cscosentTableCombined)[2] <- 'Sentiment'
+
+#write as table
+write.csv(cscosentTableCombined, "CSCO_sentiment.csv")
+
+
+
+
+
+
+
+#######
+
+
+
+
+### Creation of Panel Data Set and Alpha Model ###
+df_nclh <- read.csv("NCLH_data.csv")
+df_ktos <- read.csv("KTOS_data.csv")
+df_gme <- read.csv("GME_data.csv")
+df_csco <- read.csv("CSCO_data.csv")
+
+df_main <- rbind(df_nclh,df_ktos,df_gme,df_csco)
+names(df_main)
+write.csv(df_main,"main_dataset.csv")
+df_main <- read.csv("main_dataset.csv")
+df_main$DATE <- as.Date(df_main$DATE,c("%m/%d/%Y"))
+sapply(df_main, class)
+
+library(plm)
+mydata = df_main
+mydata$sma_sig_sq <- mydata$sma_signal_duration^2
+head(mydata,n=2)
+mydata = na.omit(mydata)
+model1 <- plm(log_return ~ OPEN+CLOSE+HIGH+LOW+ADJUSTED_PRICE+CPI+sma3+sma13+sma3_signal+sma_signal_duration+sma_sig_sq+SENTIMENT, data = mydata, model = "random", 
+    index = c("DATE","SYMBOL"))
+summary(model1)
+#remove CLOSE and CPI
+model2 <- plm(log_return ~ OPEN+HIGH+LOW+ADJUSTED_PRICE+sma3+sma3_signal+sma_signal_duration+sma_sig_sq, data = mydata, model = "random", 
+              index = c("DATE","SYMBOL"))
+summary(model2)
+
+
